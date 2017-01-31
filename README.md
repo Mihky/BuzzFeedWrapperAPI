@@ -1,6 +1,6 @@
 # BuzzFeedWrapperAPI
 # How to Run Code
-- [ ] Download repo 
+- [ ] Download repo (and Python 3.6.0 if you haven't)
 - [ ] Open Terminal/Command Prompt/GitBash and CD into repo
 - [ ] Run line 'python -i BuzzFeedWrapperAPI.py' to enter into interactive mode.
 - [ ] Create BuzzFeedQuery() object and start querying
@@ -14,10 +14,8 @@
 
 ## Inputs
 :star: feed: string
-<br/>:star: timestamp: same format that the JSON data follows: 
-<br/>'Year(4-digit)-Month(2-digit)-Day(2-digit) Hour(2-digit)-Minute(2-digit)-Second(2-digit)'. 
-<br/>(e.g. New Years 2017 == '2017-01-01 00:00:00')
-<br/>:star: keywords: list of string
+<br/>:star: timestamp: string (e.g. New Years 2017 == '2017-01-01 00:00:00')
+<br/>:star: keywords: list of strings
 <br/>:star: threshold: integer
 
 ### Example of how to use program:
@@ -25,7 +23,7 @@ $ python -i BuzzFeedWrapperAPI.py
 <br/>>>> buzzFeedAPI = BuzzFeedQuery()
 <br/>>>> buzzFeedAPI.queryTime('lol', '2016-12-25 00:00:00', '2017-01-01 00:00:00')
 <br/>... output ...
-<br/>>>> buzzFeedAPI.queryKeyword('cats', [gato, cat, dog, garfield, ate, clifford, the, big, red, dog])
+<br/>>>> buzzFeedAPI.queryKeyword('cats', ['gato', 'cat', 'dog', 'garfield', 'ate', 'clifford', 'the', 'big', 'red', 'dog'])
 <br/>... output ...
 <br/>>>> buzzFeedAPI.queryThreshold('viral', '2016-12-25 00:00:00', '2017-1-1 00:00:00', 100)
 <br/>... output ...
@@ -42,5 +40,8 @@ __1.__ Created an internal cache, '__queryCache__', used to save the user's quer
 <br/>:fire: One thing I would definitely change about my implementation though is task 2. I currently have it so that I look through every title + description and check if the words are in the hashmap of keywords, which takes a long time. I would redesign the API so that when the article is published, I would save the words in the title and desription into a hashmap of all words in every title and description published so far. The values would then be a list of articles that contain the key word. Because I'm given a list of articles already made, I chose to simply go through the title and description of all the articles.
 
 # Algorithms
-- For tasks 1 and 3, the algorithm is very synonymous. You iterate through the list of buzzes and add it to the filtered list if it passes some condition or some constraint. So for both of these tasks, the runtime and space is linear.
-- For task 2, I put the inputed key words into a hashmap (dictionary) mainly for lookup speed O(1) compared to O(n) of the given array. I go through each of the articles, and go through the title and description and look up if the current word is in the map and append if it is and continue to the next article, else move on to the next word.
+• For tasks 1 and 3, the algorithm is very synonymous. You iterate through the list of buzzes and add it to the filtered list if it passes some condition or some constraint. So for both of these tasks, the runtime and space is linear.
+<br/>• For task 2, I put the inputed key words into a hashmap (dictionary) mainly for lookup speed O(1) compared to O(n) of the given array. I go through each of the articles, and go through the title and description and look up if the current word is in the map and append if it is and continue to the next article, else move on to the next word.
+
+# Testing
+:microscope: Unit tests contained in the BuzzFeedWrapperAPITest.py file.
