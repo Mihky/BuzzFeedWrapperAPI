@@ -1,6 +1,5 @@
 import json
 import datetime
-from multipledispatch import dispatch
 try:
 	from urllib.request import urlopen
 except ImportError:
@@ -12,6 +11,8 @@ class BuzzFeedQuery:
 	def __init__(self):
 		print ('Start Querying Away!')
 		self.queryCache = {}
+		# Mainly used for testing
+		self.tempJSONData = []
 
 	# Outputs all feed buzzes that were published between the start and end timestamps.
 	def queryTime(self, feed, start, end):
@@ -36,6 +37,7 @@ class BuzzFeedQuery:
 			# checks to see that the current buzz's timestamp is between the start and end time bounds
 			if lower <= current and current <= upper:
 				result.append(buzz)
+		self.tempJSONData = result
 		print(json.dumps(result, indent=4, sort_keys=True))
 
 	# Outputs all feed buzzes that have keywords in either their titles/descriptions
@@ -74,6 +76,7 @@ class BuzzFeedQuery:
 				word = word.lower()
 				if word in keywordMap:
 					result.append(buzz)
+		self.tempJSONData = result
 		print(json.dumps(result, indent=4, sort_keys=True))
 
 	# Outputs the feed buzzes whose number of comments meet some threshold amount
@@ -84,9 +87,9 @@ class BuzzFeedQuery:
 			return
 		
 		feed = feed.lower()
-		if self.checkCache(feed):
+		if not self.checkCache(feed):
 			self.setCache(feed)
-		
+
 		buzzes = self.queryCache[feed]
 		result = []
 		for buzz in buzzes:
@@ -94,6 +97,7 @@ class BuzzFeedQuery:
 			if threshold is not None and comments < threshold:
 				continue
 			result.append(buzz)
+		self.tempJSONData = result
 		print(json.dumps(result, indent=4, sort_keys=True))
 
 	# Checks if feed is in the cache, which means that the feed has been queried before
