@@ -30,8 +30,8 @@ class BuzzFeedQuery:
 		result = []
 		if not self.checkCache(feed):
 			self.setCache(feed)
+		
 		buzzes = self.queryCache[feed]
-
 		for buzz in buzzes:
 			current = datetime.datetime.strptime(buzz['published_date'], '%Y-%m-%d %H:%M:%S')
 			# checks to see that the current buzz's timestamp is between the start and end time bounds
@@ -89,12 +89,13 @@ class BuzzFeedQuery:
 		feed = feed.lower()
 		if not self.checkCache(feed):
 			self.setCache(feed)
-
-		buzzes = self.queryCache[feed]
+		
 		result = []
+		buzzes = self.queryCache[feed]
 		for buzz in buzzes:
 			comments = 0 if buzz['comment_stats'] == 'null' or buzz['comment_stats'] is None else buzz['comment_stats']
-			if threshold is not None and comments < threshold:
+			# if threshold is not None and comments < threshold:
+			if comments < threshold:
 				continue
 			result.append(buzz)
 		self.tempJSONData = result
@@ -116,5 +117,3 @@ class BuzzFeedQuery:
 		response = urlopen(queryUrl)
 		jsonData = json.loads(response.read().decode('utf-8'))
 		return jsonData['buzzes']
-	def test(self, feed):
-		print(json.dumps(self.getJSONData(feed), indent=4, sort_keys=True))
