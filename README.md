@@ -11,21 +11,23 @@
 <br/>:star: timestamp: string (e.g. New Years 2017 == '2017-01-01 00:00:00')
 <br/>:star: keywords: list of strings
 <br/>:star: threshold: integer
+<br/>1. Query by Time:
+ - BuzzFeedQuery.query(feed, start, end): given feed, start timestamp, & end timestamp, output buzzes of the given feed published between those times
 
-1. BuzzFeedQuery.queryTime(feed, start, end): given feed, start timestamp, & end timestamp, output buzzes of the given feed published between those times
-
-2. BuzzFeedQuery.queryKeyword(feed, keywords): given feed & keywords, output buzzes of the given feed containing any of the keywords in the buzz 'title' or 'description'
+2. Query by Keywords: 
+ - BuzzFeedQuery.query(feed, None, None, keywords): given feed & keywords, output buzzes of the given feed containing any of the keywords in the buzz 'title' or 'description'
  
-3. BuzzFeedQuery.queryThreshold(feed, start, end, threshold): given feed, start timestamp, end timestamp, & threshold, output buzzes of the given feed whose number of comments meets a certain threshold number
+3. Query by Threshold: 
+ - BuzzFeedQuery.query(feed, None, None, None, threshold): given feed, start timestamp, end timestamp, & threshold, output buzzes of the given feed whose number of comments meets a certain threshold number
 
 ### Example of how to use program:
 $ python -i BuzzFeedWrapperAPI.py
 <br/>>>> buzzFeedAPI = BuzzFeedQuery()
-<br/>>>> buzzFeedAPI.queryTime('lol', '2016-12-25 00:00:00', '2017-01-01 00:00:00')
+<br/>>>> buzzFeedAPI.query('lol', '2016-12-25 00:00:00', '2017-01-01 00:00:00')
 <br/>... output ...
-<br/>>>> buzzFeedAPI.queryKeyword('cats', ['gato', 'cat', 'dog', 'garfield', 'ate', 'clifford', 'the', 'big', 'red', 'dog'])
+<br/>>>> buzzFeedAPI.query('cats', None, None, ['gato', 'cat', 'dog', 'garfield', 'ate', 'clifford', 'the', 'big', 'red', 'dog'])
 <br/>... output ...
-<br/>>>> buzzFeedAPI.queryThreshold('viral', '2016-12-25 00:00:00', '2017-1-1 00:00:00', 100)
+<br/>>>> buzzFeedAPI.query('viral', None, None, None, 100)
 <br/>... output ...
 - - - -
 
