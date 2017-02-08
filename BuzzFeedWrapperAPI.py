@@ -2,8 +2,10 @@ import json
 import datetime
 try:
 	from urllib.request import urlopen
+	import urllib as ul
 except ImportError:
 	from urllib2 import urlopen
+	import urllib2 as ul
 
 class BuzzFeedQuery:
 	FEEDS_URL = 'http://buzzfeed.com/api/v2/feeds/'
@@ -14,11 +16,27 @@ class BuzzFeedQuery:
 		# Mainly used for testing
 		self.tempJSONData = []
 
+	# Overloaded query function
+	def query(self, feed, start=None, end=None, keywords=None, threshold=None):
+		if type(feed) is not str:
+			print('Invalid Threshold Query Call')
+			return
+		feed = feed.lower()
+		if not self.checkCache(feed):
+			self.setCache(feed)
+
+		if keywords is None and threshold is None:
+			print(json.dumps(self.queryTime(feed, start, end), indent=4, sort_keys=True))
+		elif start is None and end is None and threshold is None:
+			print(json.dumps(self.queryKeyword(feed, keywords), indent=4, sort_keys=True))
+		elif keywords is None:
+			print(json.dumps(self.queryThreshold(feed, start, end, threshold), indent=4, sort_keys=True))
+
 	# Outputs all feed buzzes that were published between the start and end timestamps.
 	def queryTime(self, feed, start, end):
 		# Checks that all inputs are valid types (should be strings) and that the timestamps are in proper format
-		if type(feed) is not str or type(start) is not str or type(end) is not str:
-			print('Invalid Query Call')
+		if type(start) is not str or type(end) is not str:
+			print('Invalid Time Query Call')
 			return
 		try:
 			lower = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
@@ -28,9 +46,6 @@ class BuzzFeedQuery:
 			return
 
 		result = []
-		if not self.checkCache(feed):
-			self.setCache(feed)
-		
 		buzzes = self.queryCache[feed]
 		for buzz in buzzes:
 			current = datetime.datetime.strptime(buzz['published_date'], '%Y-%m-%d %H:%M:%S')
@@ -38,15 +53,11 @@ class BuzzFeedQuery:
 			if lower <= current and current <= upper:
 				result.append(buzz)
 		self.tempJSONData = result
-		print(json.dumps(result, indent=4, sort_keys=True))
+		return result
+		# print(json.dumps(result, indent=4, sort_keys=True))
 
 	# Outputs all feed buzzes that have keywords in either their titles/descriptions
 	def queryKeyword(self, feed, keywords):
-		# Checks that feed is a valid string query 
-		if type(feed) is not str:
-			print('Invalid Query Call')
-			return
-
 		# Checks that input list of keywords are all strings
 		for keyword in keywords:
 			if type(keyword) is not str:
@@ -58,10 +69,6 @@ class BuzzFeedQuery:
 		# put all keywords into the hashmap
 		for word in keywords:
 			keywordMap[word.lower()] = 1
-		
-		feed = feed.lower()
-		if not self.checkCache(feed):
-			self.setCache(feed)
 		
 		buzzes = self.queryCache[feed]
 		for buzz in buzzes:
@@ -77,18 +84,14 @@ class BuzzFeedQuery:
 				if word in keywordMap:
 					result.append(buzz)
 		self.tempJSONData = result
-		print(json.dumps(result, indent=4, sort_keys=True))
+		return result
 
 	# Outputs the feed buzzes whose number of comments meet some threshold amount
 	def queryThreshold(self, feed, start, end, threshold):
 		# Checks that feed is a string and that threshold is an int
-		if type(feed) is not str or type(threshold) is not int:
-			print('Invalid Query Call')
+		if type(threshold) is not int:
+			print('Invalid Threshold Query Call')
 			return
-		
-		feed = feed.lower()
-		if not self.checkCache(feed):
-			self.setCache(feed)
 		
 		result = []
 		buzzes = self.queryCache[feed]
@@ -99,7 +102,7 @@ class BuzzFeedQuery:
 				continue
 			result.append(buzz)
 		self.tempJSONData = result
-		print(json.dumps(result, indent=4, sort_keys=True))
+		return result
 
 	# Checks if feed is in the cache, which means that the feed has been queried before
 	def checkCache(self, feed):
@@ -113,7 +116,10 @@ class BuzzFeedQuery:
 
 	# Given a feed, returns the buzzes correlated to that feed
 	def getJSONData(self, feed):
-		queryUrl = '%s%s' % (self.FEEDS_URL, feed)
-		response = urlopen(queryUrl)
-		jsonData = json.loads(response.read().decode('utf-8'))
-		return jsonData['buzzes']
+		try:
+			queryUrl = '%s%s' % (self.FEEDS_URL, feed)
+			response = urlopen(queryUrl)
+			jsonData = json.loads(response.read().decode('utf-8'))
+			return jsonData['buzzes']
+		except ul.error.HTTPError:
+			print('HTTP 500 Error: Oopsie!')
