@@ -116,7 +116,6 @@ class BuzzFeedQuery:
 
 	# Given a feed, returns the buzzes correlated to that feed
 	def getJSONData(self, feed):
-<<<<<<< HEAD
 		try:
 			queryUrl = '%s%s' % (self.FEEDS_URL, feed)
 			response = urlopen(queryUrl)
@@ -124,9 +123,3 @@ class BuzzFeedQuery:
 			return jsonData['buzzes']
 		except ul.error.HTTPError:
 			print('HTTP 500 Error: Oopsie!')
-=======
-		queryUrl = '%s%s' % (self.FEEDS_URL, feed)
-		response = urlopen(queryUrl)
-		jsonData = json.loads(response.read().decode('utf-8'))
-		return jsonData['buzzes']
->>>>>>> 8c90c483fadac0102a443dd922f84aa84f38d0ee
