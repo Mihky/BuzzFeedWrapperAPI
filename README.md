@@ -11,7 +11,7 @@
 <br/>:star: timestamp: string (e.g. New Years 2017 == '2017-01-01 00:00:00')
 <br/>:star: keywords: list of strings
 <br/>:star: threshold: integer
-<br/><br/>
+<br/>
 
 1. Query by Time:
  - BuzzFeedQuery.query(feed, start, end): given feed, start timestamp, & end timestamp, output buzzes of the given feed published between those times
