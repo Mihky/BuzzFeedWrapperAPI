@@ -19,7 +19,7 @@ class BuzzFeedQuery:
 	# Overloaded query function
 	def query(self, feed, start=None, end=None, keywords=None, threshold=None):
 		if type(feed) is not str:
-			print('Invalid Threshold Query Call')
+			print('Invalid Query Call')
 			return
 		feed = feed.lower()
 		if not self.checkCache(feed):
@@ -61,7 +61,7 @@ class BuzzFeedQuery:
 		# Checks that input list of keywords are all strings
 		for keyword in keywords:
 			if type(keyword) is not str:
-				print('Invalid Query Call')
+				print('Invalid Keywords Query Call')
 				return
 
 		result = []
